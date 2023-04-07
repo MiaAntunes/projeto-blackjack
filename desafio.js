@@ -1,93 +1,163 @@
-let x = 0
-while(x < 20){
-   const telaInicialDoJogo = confirm("Bem vinde ao Jogo \nQuer iniciar um nova jogada?"); 
+function comprarCarta() {
+   // Cria array de cartas
+   const cartas = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
-if(telaInicialDoJogo === false){
-   alert("O Jogo acabou!")
-}else{
-   let cartaUsuario1 = comprarCarta();
-   let cartaUsuario2 = comprarCarta();
-   let cartaComputador1 = comprarCarta();
-   let cartaComputador2 = comprarCarta();
+   // Cria array de naipes
+   const naipes = ["♦️", "♥️", "♣️", "♠️"]
 
-   const excessaoCartasUsuario = cartaUsuario1.texto === "A" && cartaUsuario2.texto === "A";
-   const excessaoCartasComputador = cartaComputador1.texto === "A" && cartaComputador2.texto === "A"
+   // Sorteia uma carta
+   const numero = cartas[Math.floor(Math.random() * 13)]
 
-   if(excessaoCartasUsuario || excessaoCartasComputador){
-      while(excessaoCartasUsuario|| excessaoCartasComputador){
-         cartaUsuario1 = comprarCarta();
-         cartaUsuario1 = comprarCarta();
-         cartaComputador1 = comprarCarta();
-         cartaComputador2 = comprarCarta();
-      }
-   }else{
-      let confirmarNovaCarta = confirm(`Suas cartas são ${cartaUsuario1.texto} ${cartaUsuario2.texto} . A carta revelada do computador é ${cartaComputador1.texto} \nDeseja comprar mais uma carta?`)
+   // Sorteia um naipe
+   const naipe = naipes[Math.floor(Math.random() * 4)]
 
-      console.log(confirmarNovaCarta)
+   let valor
 
-      //"Suas cartas são 3♣️ J♥️ 5♣️ 4♣️ . Sua pontuação é 22.\\n" + "As cartas do computador são Q♠️ K♦️ . A pontuação do computador é 20.\\n" + "O computador ganhou!"
+   // Verifica se é uma das letras e coloca o valor correspondente na variável valor
+   if (numero === "A") {
+      valor = 11
+   } else if (numero === "J" || numero === "Q" || numero === "K") {
+      valor = 10
+   } else { // Se nao for uma das letras, só converte a string para número
+      valor = Number(numero)
+   }
 
-      let somaCartasUsuario = cartaUsuario1.valor + cartaUsuario2.valor
-      let somaCartasComputador = cartaComputador1.valor + cartaComputador2.valor   
-      let cartaUsuarioX
-      let cartaComputadorX 
-      
-      let finalDeJogo
+   // Cria um objeto da carta com as propriedades que vamos precisar: texto e valor
+   const carta = {
+      texto: numero + naipe,
+      valor: valor
+   }
 
-      while(somaCartasUsuario <= 21 && somaCartasComputador <= 21){
+   return carta
+}
 
-         if(confirmarNovaCarta === false){
-            finalDeJogo = alert(`Suas cartas são ${cartaUsuario1.texto} ${cartaUsuario2.texto}. Sua pontuação é de ${somaCartasUsuario} \nAs cartas do computador é ${cartaComputador1.texto} ${cartaComputador2.texto}. A pontuação do computador é ${somaCartasComputador}`)
-            break;
-            // console.log(finalDeJogo)
+let telaInicialDoJogo = confirm("Bem vinde ao Jogo \nQuer iniciar um nova jogada?");
+while (telaInicialDoJogo) {
 
-         }else{
+   if (telaInicialDoJogo === false) {
+   } else {
+      let cartaUsuario = [comprarCarta(), comprarCarta()]
+      let cartaComputador = [comprarCarta(), comprarCarta()]
 
-            while(somaCartasUsuario < 21 && somaCartasComputador < 21){
-               cartaUsuarioX = comprarCarta()
-               cartaComputadorX = comprarCarta()
+      // Não esquece de tirar depois --------------
+      console.log("Cartas Usuarios ", cartaUsuario[0].texto, cartaUsuario[1].texto)
+      console.log("Cartas Computador ", cartaComputador[0].texto, cartaComputador[1].texto)
 
-               somaCartasUsuario += cartaUsuarioX.valor
-               somaCartasComputador += cartaComputadorX.valor
+      let excessaoCartasUsuario = cartaUsuario[0].texto === "A" && cartaUsuario[1].texto === "A";
+      let excessaoCartasComputador = cartaComputador[0].texto === "A" && cartaComputador[1].texto === "A"
 
-               console.log("User: ", somaCartasUsuario)
-               console.log("Comp: ", somaCartasComputador)
-          
-               confirmarNovaCarta = confirm(`Suas cartas são ${cartaUsuario1.texto} ${cartaUsuario2.texto} ${cartaUsuarioX.texto}. A carta revelada do computador é ${cartaComputadorX.texto}. Deseja comprar mais uma carta?`) 
+      // Não esquece de tirar depois --------------
+      console.log("Sabe se as Cartas sairam 'A' ", excessaoCartasComputador, excessaoCartasUsuario)
 
-               if(somaCartasUsuario > 21 || somaCartasComputador > 21){
-                  finalDeJogo = alert(`Suas cartas são ${cartaUsuario1.texto} ${cartaUsuario2.texto} ${cartaComputadorX.texto}. Sua pontuação é de ${somaCartasUsuario} \nAs cartas do computador é ${cartaComputador1.texto} ${cartaComputador2.texto} ${cartaComputadorX.texto}. A pontuação do computador é ${somaCartasComputador}`)
+      if (excessaoCartasUsuario || excessaoCartasComputador) {
+         while (excessaoCartasUsuario || excessaoCartasComputador) {
+            cartaUsuario.pop();
+            cartaUsuario.push(comprarCarta()) // Ficar Atenta
+            cartaComputador.pop();
+            cartaComputador.push(comprarCarta())
+         }
+      } else {
+         let confirmarNovaCarta = confirm(`Suas cartas são ${cartaUsuario[0].texto} ${cartaUsuario[1].texto} . A carta revelada do computador é ${cartaComputador[0].texto} \nDeseja comprar mais uma carta?`)
+         // Não esquece de tirar depois --------------
+         console.log("Para saber se o usuário quer ou não ", confirmarNovaCarta)
+
+         // [X] muda pra consumir as cartas com um laço (for, for of, map)
+         let somaCartasUsuario = cartaUsuario.map(() => {
+            let somarArray = cartaUsuario[0].valor + cartaUsuario[1].valor
+            return somarArray
+         })
+         let somaCartasComputador = cartaComputador.map(function somar() {
+            let somarArray = cartaComputador[0].valor + cartaComputador[1].valor
+            return somarArray
+         })
+         console.log("Pontuação Usuario: ", somaCartasUsuario[0])// Não esquece de colocar issooo !!!!
+         console.log("Pontuação Comp: ", somaCartasComputador[0]) // Não esquece de colocar issooo !!!!
+
+         let cartaUsuarioX = []
+         let cartaComputadorX = []
+         let finalDeJogo
+         let mensagemCartasUsuario
+         let mensagemCartasComputador
+         let i = 0
+
+         while (somaCartasUsuario[0] <= 21 && somaCartasComputador[0] <= 21) {
+            if (confirmarNovaCarta === false) {
+               finalDeJogo = alert(`Suas cartas são ${cartaUsuario[0].texto} ${cartaUsuario[1].texto}. Sua pontuação é de ${somaCartasUsuario[0]} \nAs cartas do computador é ${cartaComputador[0].texto} ${cartaComputador[1].texto}. A pontuação do computador é ${somaCartasComputador[0]}`)
+
+               // ! Retirar depois
+               console.log(finalDeJogo)
+               break;
+
+            } else { 
+               // REFAZER 
+               while (somaCartasUsuario[0] < 21) {
+                  cartaUsuarioX.push(comprarCarta())
+
+                  // ! Loop para as cartas do Usuario
+                  for (let i = 0; i < cartaUsuarioX.length; i++) {
+                     mensagemCartasUsuario += cartaUsuarioX[i].texto;
+                  }
+                  // ! Loop para as cartas do Usuario
+                  for (let i = 0; i < cartaComputadorX.length; i++) {
+                     mensagemCartasComputador += cartaComputadorX[i].texto;
+                  }
+
+                  for (let i = 0; i <= cartaUsuarioX.length; i++) {
+                     somaCartasUsuario[0] = somaCartasUsuario[0] + cartaUsuarioX[i].valor
+
+                     confirmarNovaCarta = confirm(`Suas cartas são ${cartaUsuario[0].texto} ${cartaUsuario[1].texto} ${cartaUsuarioX[i].texto} . A carta revelada do computador é ${cartaComputador[0].texto} \nDeseja comprar mais uma carta?`)
+
+                     i++
+                  }
+                  break
                }
-               break
+               while (somaCartasComputador[0] < 21) {
+                  cartaComputadorX.push(comprarCarta())
 
+                  for (let i = 0; i <= cartaComputadorX.length; i++) {
+                     somaCartasComputador[0] = somaCartasComputador[0] + cartaComputadorX[i].valor
+                     i++
+                  }
+                  break
+               }
+
+               finalDeJogo = alert(`Suas cartas são ${cartaUsuario[0].texto} ${cartaUsuario[1].texto} ${mensagemCartasUsuario}. Sua pontuação é de ${somaCartasUsuario[0]} \nAs cartas do computador é ${cartaComputador[0].texto} ${cartaComputador[1].texto} ${mensagemCartasComputador}. A pontuação do computador é ${somaCartasComputador[0]}`)
+
+               console.log("Usuario :", cartaUsuario[0].texto, cartaUsuario[1].texto, cartaUsuarioX[i].texto)
             }
          }
+         if (somaCartasUsuario[0] > somaCartasComputador[0] && somaCartasUsuario[0] <= 21) {
+            finalDeJogo += alert(`O usuário ganhou!`)
+            console.log("O usuário ganhou!")
+         } else if (somaCartasComputador[0] > somaCartasUsuario[0] && somaCartasComputador[0] <= 21) {
+            finalDeJogo += alert(`O computador ganhou!`)
+            console.log("O computador ganhou!")
+         } else if (somaCartasUsuario[0] < somaCartasComputador[0] && somaCartasComputador[0] > 21) {
+            finalDeJogo += alert(`O usuário ganhou!`)
+            console.log("O usuário ganhou!")
+         } else if (somaCartasComputador[0] < somaCartasUsuario[0] && somaCartasUsuario[0] > 21) {
+            finalDeJogo += alert(`O computador ganhou!`)
+            console.log("O computador ganhou!")
+         } else if (somaCartasUsuario[0] === somaCartasComputador[0] && somaCartasUsuario[0] <= 21) {
+            finalDeJogo += alert(`Empate!`)
+            console.log("Empate!")
+         } else if (somaCartasUsuario[0] === somaCartasComputador[0] && somaCartasUsuario[0] > 21) {
+            console.log("Num sei")
+            //ÉS O QUE FAZER !!!!!
+         } else {
+            console.log("ERRO!")
+         }
       }
-
-      if(somaCartasUsuario > somaCartasComputador && somaCartasUsuario <= 21 ){
-         finalDeJogo += alert(`O usuário ganhou!`)
-         console.log("O usuário ganhou!")
-      }else if(somaCartasComputador > somaCartasUsuario && somaCartasComputador <= 21 ){
-         finalDeJogo += alert(`O computador ganhou!`)
-         console.log("O computador ganhou!")
-      }else if(somaCartasUsuario < somaCartasComputador && somaCartasComputador > 21){
-         finalDeJogo += alert(`O usuário ganhou!`)
-         console.log("O usuário ganhou!")
-      }else if(somaCartasComputador < somaCartasUsuario && somaCartasUsuario > 21 ){
-         finalDeJogo += alert(`O computador ganhou!`)
-         console.log("O computador ganhou!")
-      }else if(somaCartasUsuario === somaCartasComputador && somaCartasUsuario <= 21 ){
-         finalDeJogo += alert(`Empate!`)
-         console.log("Empate!")
-      }else if(somaCartasUsuario === somaCartasComputador && somaCartasUsuario > 21){
-         console.log("Num sei")
-         //ÉS O QUE FAZER !!!!!
-      } else{
-         console.log("ERRO!")
-      }
-      
    }
+   telaInicialDoJogo = confirm("Bem vinde ao Jogo \nQuer iniciar um nova jogada?");
 }
-x++
-}
+alert("O Jogo acabou!")
 
+///
+// do {
+//    telaInicialDoJogo = confirm("Bem vinde ao Jogo \nQuer iniciar um nova jogada?");
+
+//    if (telaInicialDoJogo === false) {
+//       break;
+//    }
+// }
